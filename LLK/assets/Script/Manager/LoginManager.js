@@ -8,34 +8,48 @@ export default class LoginManager{
         if(instance == null){
             instance = new LoginManager()
             instance.domain = "https://2zhuji.cn"
-            instance.token = "wkgq1527239965"
+            instance.token = "sgxxlb1529915009"
+            instance.login_data={}
+            instance.host={}
+            instance.login_flag=false
+            instance.callback=null
+            instance.data={}
+            instance.key_login="game_userinfo"
+
         }
         return instance
     }
 
-    WxLogin(callback){
-        if(callback&&!this.callback){
-            this.callback=callback;
-        }
-        if(this.login_flag){
+    WxLogin(res,callback){
+        let that = this;
+        if(this.login_flag||this.callback){
             return;
         }
-        //要实时获取用户信息
         this.login_flag=true;
-        this.loginNow();
-    }
-    loginNow() {
-        //要获取unionid,需要先获取session_key,encryptedData和iv
-        //调用微信小程序wx.login,获取用户的信息和res.code
-        var _this = this;
+        if(callback){
+            this.callback=callback;
+        }
         wx.login({
             success: function (login_res) {
-                _this.sendSession(login_res.code);
+                that.login_data["encryptedData"] = res.encryptedData;
+                that.login_data["iv"] = res.iv;
+                that.host = {
+                    name: res.userInfo.nickName,
+                    portrait: res.userInfo.avatarUrl,
+                    unionid: "",
+                    wecha_id: "",
+                    province: res.userInfo.province,
+                    city: res.userInfo.city,
+                    sex: res.userInfo.gender
+                }
+                that.sendSession(login_res.code);
             },
-            fail: function(res){
-                console.log("loginNow:" + res);
-                _this.loginFail();
-            }
+            fail: function (res) {
+
+            },
+            complete: function (res) {
+
+            },
         });
     }
     sendSession(code) {
@@ -48,19 +62,8 @@ export default class LoginManager{
             url: _this.domain+'/index.php?g=Wap&m=Wxaapi&a=login',
             data:post_data,
             success:function(res){
-                console.log("sendsession:",res);
                 if(res.data.status==1001){
                     _this.data.session_3rd = res.data.session_3rd;
-                    _this.data.auth="getSession";
-                    //当前用为新用户
-                    _this.data.new_user = res.data.new_user;
-                    if(res.data.userinfo&&(res.data.userinfo.forbidden=="1")){
-                        //当前用户在黑名单，退出
-                        _this.callBack=null;
-                        _this.login_flag=false;
-                        wx.navigateBack(30);
-                        return;
-                    }
                     if(res.data.userinfo&&res.data.userinfo.wecha_id&&res.data.userinfo.wechaname&&res.data.userinfo.portrait){
                         //服务器存有当前用户的信息，就用这个信息，授权登陆结束
                         var info=res.data.userinfo;
@@ -110,16 +113,12 @@ export default class LoginManager{
                                         _this.getUserBySession(true);
                                     },
                                     fail: function (res) {
-                                        console.log("getUserInfo2 fail");
-                                        _this.data.auth="fail";
                                         _this.login_flag=false;
                                         _this.loginFail();
                                     }
                                 });
                             },
                             fail: function (res) {
-                                console.log("getUserInfo fail");
-                                _this.data.auth="fail";
                                 _this.login_flag=false;
                                 _this.loginFail();
                             }
@@ -156,14 +155,13 @@ export default class LoginManager{
                         }
                     });
                     _this.data.auth="success";
-                    console.log("done");
+                    console.log("getUserBySession success")
                     if(_this.callback){
                         _this.callback();
                         _this.callback=null;
                     }
                     _this.login_flag=false;
                 }else{
-                    console.log("getUserBySession:" + res)
                     _this.loginFail();
                 }
             }

@@ -98,6 +98,13 @@ cc.Class({
                         success: res => {
                             console.log("wx.getFriendCloudStorage success", res);
                             let data = res.data;
+                            for(let i = data.length - 1; i >= 0 ; i--)
+                            {
+                                if(data[i].KVDataList[0].value == 'undefined')
+                                {
+                                    data.splice(i, 1);
+                                }
+                            }
                             data.sort((a, b) => {
                                 if (a.KVDataList.length == 0 && b.KVDataList.length == 0) {
                                     return 0;
@@ -117,6 +124,7 @@ cc.Class({
                                     myPlayerInfo = data[i];
                                 }
                             }
+                            console.log("data==========", data)
                             for (let i = 0; i < data.length; i++) {
                                 var playerInfo = data[i];
                                 var item = cc.instantiate(this.prefabRankItem);
@@ -168,6 +176,13 @@ cc.Class({
                             console.log("wx.getGroupCloudStorage success", res);
                             this.loadingLabel.active = false;
                             let data = res.data;
+                            for(let i = data.length - 1; i >= 0 ; i--)
+                            {
+                                if(data[i].KVDataList[0].value == 'undefined')
+                                {
+                                    data.splice(i, 1);
+                                }
+                            }
                             data.sort((a, b) => {
                                 if (a.KVDataList.length == 0 && b.KVDataList.length == 0) {
                                     return 0;

@@ -21,6 +21,7 @@ export default class ModuleConstant {
         this.moduleNames["GameResultPanel"] = "Prefab/Panel/GameResultPanel"
         this.moduleNames["RankPanel"] = "Prefab/Panel/RankPanel"
         this.moduleNames["AdPanel"] = "Prefab/Panel/AdPanel"
+        this.moduleNames["LoginPanel"] = "Prefab/Panel/LoginPanel"
     }
 
     GetModuleUrl(moduleName){

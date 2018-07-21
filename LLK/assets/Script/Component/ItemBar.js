@@ -47,12 +47,19 @@ cc.Class({
     },
 
     onLoad() {
-        var temp = this
+
+    },
+
+    start(){
+        databus.itemBarInstance = this
         EventUtil.GetInstance().AddEventListener("UnselectItem", function(){
             databus.selectItemMode = ""
-            temp.btnExchange.node.setScale(cc.v2(0.8,0.8))
-            temp.btnRemove.node.setScale(cc.v2(0.8,0.8))
-            temp.btnExplod.node.setScale(cc.v2(0.8,0.8))
+            if(databus.itemBarInstance.btnExchange)
+            {
+                databus.itemBarInstance.btnExchange.node.setScale(cc.v2(0.8,0.8))
+                databus.itemBarInstance.btnRemove.node.setScale(cc.v2(0.8,0.8))
+                databus.itemBarInstance.btnExplod.node.setScale(cc.v2(0.8,0.8))
+            }
         })
         this.btnExchange.node.setScale(cc.v2(0.8,0.8))
         this.btnRemove.node.setScale(cc.v2(0.8,0.8))

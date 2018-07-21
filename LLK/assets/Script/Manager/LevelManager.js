@@ -12,6 +12,7 @@ export default class LevelManager {
 
     SwitchLevel(lvName, levelParam){
         this.CurrentLevelParam = levelParam
+        console.log("SwitchLevel:" + lvName)
         cc.director.loadScene(lvName)
     }
 

@@ -29,6 +29,7 @@ export default class GameInfo {
 
     Start(cellContent){
         databus.Reset()
+        this.inCheck = false
         this.cellContent = cellContent
         this.unitList = new Array()
         for(var row = 0; row < databus.gridRow; row++)
@@ -55,8 +56,10 @@ export default class GameInfo {
         {
             return
         }
+        console.log("CheckLLK 11111111")
         if(databus.selectItemMode == "RemoveItem")
         {
+            console.log("CheckLLK 22222222222")
             databus.itemRemoveNum--
             targetUnit.RemoveCell(1)
             targetUnit.empty = true
@@ -71,6 +74,7 @@ export default class GameInfo {
         }
         else if(databus.selectItemMode == "ExplodItem")
         {
+            console.log("CheckLLK 3333333333")
             databus.itemExplodNum--
             targetUnit.RemoveCell(1)
             targetUnit.empty = true
@@ -629,6 +633,12 @@ export default class GameInfo {
 
         rtnArr = [];
         return rtnArr;
+    }
+
+    Reborn(){
+        databus.win = null
+        ModuleManager.GetInstance().HideModule("GameResultPanel")
+        EventUtil.GetInstance().DispatchEvent("Reborn")
     }
 
     Replay(){

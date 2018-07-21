@@ -7,6 +7,8 @@ import BasePanel from 'BasePanel'
 import InterfaceManager from "InterfaceManager"
 import Databus from 'Databus'
 import GameInfo from "GameInfo";
+import EventUtil from 'EventUtil'
+import ArrayUtil from 'ArrayUtil'
 
 let databus = new Databus()
 
@@ -44,12 +46,32 @@ cc.Class({
         }
     },
 
+    onLoad(){
+        var temp = this
+        EventUtil.GetInstance().AddEventListener("VideoWatchOver", function(){
+            temp.reborn()
+        })
+
+        if(databus.cfgData.audit == 1)
+        {
+            this.btnShare.node.active = false
+        }
+        else
+        {
+            this.btnShare.node.active = true
+        }
+    },
+
+    start(){
+        //InterfaceManager.GetInstance().CreateAdViedo(ArrayUtil.GetRandomValue(databus.cfgData.set.wx_video))
+    },
+
     update() {
 
     },
 
     onDestroy() {
-        GameInfo.GetInstance().Replay()
+        EventUtil.GetInstance().RemoveEventKey("VideoWatchOver")
     },
 
 
@@ -68,9 +90,18 @@ cc.Class({
 
     onReplayClick() {
         ModuleManager.GetInstance().HideModule("GameResultPanel")
+        EventUtil.GetInstance().DispatchEvent("ReturnToPreload")
+        //EventUtil.GetInstance().DispatchEvent("VideoWatchOver")
     },
 
     onRankClick() {
         ModuleManager.GetInstance().ShowModule("RankPanel")
+    },
+
+    reborn(){
+        if(databus.cfgData.set.relive_time > 0)
+        {
+            GameInfo.GetInstance().Reborn()
+        }
     }
 })    

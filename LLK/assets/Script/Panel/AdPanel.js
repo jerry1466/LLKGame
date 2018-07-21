@@ -23,16 +23,31 @@ cc.Class({
 
     onLoad() {
         //console.log(databus.cfgData.set.love_game_ad.type, databus.cfgData.set.love_game_ad.poster)
-        this.imageUrl =  ArrayUtil.GetRandomValue(databus.cfgData.set.love_game_ad.poster).img
+        var randomItem = ArrayUtil.GetRandomValue(databus.cfgData.set.love_game_ad.poster)
+        this.imageUrl =  randomItem.img
         var temp = this
-        cc.loader.load(this.imageUrl, function(err, texture){
-            var width = texture.width
-            var height = texture.height
-            var frame = new cc.SpriteFrame(texture)
-            temp.spAd.spriteFrame = frame
-            temp.spAd.node.width = 300
-            temp.spAd.node.height = 500
-        })
+        if(randomItem.preview == 1)
+        {
+            this.btnDownload.node.active = false
+            wx.previewImage({
+                urls:[temp.imageUrl],
+                success:function(res){
+                }
+            })
+            ModuleManager.GetInstance().HideModule("AdPanel")
+        }
+        else
+        {
+            this.btnDownload.node.active = true
+            cc.loader.load(this.imageUrl, function(err, texture){
+                var width = texture.width
+                var height = texture.height
+                var frame = new cc.SpriteFrame(texture)
+                temp.spAd.spriteFrame = frame
+                temp.spAd.node.width = 300
+                temp.spAd.node.height = 500
+            })
+        }
     },
 
     update() {

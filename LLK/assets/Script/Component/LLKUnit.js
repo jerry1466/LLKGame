@@ -51,6 +51,7 @@ cc.Class({
     },
 
     onClick(){
+        console.log("LLKUnit Click")
         GameInfo.GetInstance().CheckLLK(this)
     },
 

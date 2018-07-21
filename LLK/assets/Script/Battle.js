@@ -10,6 +10,7 @@ import TweenScale from 'TweenScale'
 import AffairConstant from "AffairConstant";
 import PrefabUtil from 'PrefabUtil'
 import ModuleManager from 'ModuleManager'
+import LevelManager from "LevelManager";
 
 let databus = new Databus()
 cc.Class({
@@ -74,49 +75,7 @@ cc.Class({
     },
 
     onLoad () {
-        var temp = this
-        EventUtil.GetInstance().AddEventListener("PlaySelectSound", function(){
-                if(databus.soundEnable)
-                    temp.bgmSelectSound.play()
-            }
-        )
-        EventUtil.GetInstance().AddEventListener("PlayWipeOffSound", function(){
-                if(databus.soundEnable)
-                    temp.bgmWipeOff.play()
-            }
-        )
-        EventUtil.GetInstance().AddEventListener("PlayExplodSound", function() {
-                if(databus.soundEnable)
-                    temp.bgmExplod.play()
-            }
-        )
-        EventUtil.GetInstance().AddEventListener("ResetCountDown", function(){
-                    temp.resetCountDown(temp)
-            }
-        )
-        EventUtil.GetInstance().AddEventListener("GameOver", function(){
-                temp.gameOver(temp)
-            }
-        )
-        EventUtil.GetInstance().AddEventListener("GameRestart", function(){
-                temp.gameRestart(temp)
-            }
-        )
-        EventUtil.GetInstance().AddEventListener("UpdateScore", function(param){
-                temp.updateScore(temp, param)
-            }
-        )
-        EventUtil.GetInstance().AddEventListener("CreateAffair", function(affair){
-                temp.createAffair(temp, affair)
-            }
-        )
-        EventUtil.GetInstance().AddEventListener("HideRulePanel", function() {
-                var countdownBar = temp.spCountDownBar.node.getComponent("UICountDownBar")
-                if (countdownBar != null) {
-                    countdownBar.Resume()
-                }
-            }
-        )
+
     },
 
     update() {
@@ -124,21 +83,87 @@ cc.Class({
     },
 
     onDestroy() {
-        EventUtil.GetInstance().RemoveEventKey("PlaySelectSound")
-        EventUtil.GetInstance().RemoveEventKey("PlayWipeOffSound")
-        EventUtil.GetInstance().RemoveEventKey("PlayExplodSound")
-        EventUtil.GetInstance().RemoveEventKey("ResetCountDown")
-        EventUtil.GetInstance().RemoveEventKey("GameOver")
-        EventUtil.GetInstance().RemoveEventKey("GameRestart")
-        EventUtil.GetInstance().RemoveEventKey("UpdateScore")
-        EventUtil.GetInstance().RemoveEventKey("HideRulePanel")
+
     },
 
     start() {
+        console.log("enter battle start this:", this)
+        this.bgmWin.stop()
+        this.bgmLose.stop()
+        this.bgmExplod.stop()
+        this.bgmWipeOff.stop()
+        this.bgmSelectSound.stop()
+        databus.battleInstance = this
+        console.log("enter battle start temp:", databus.battleInstance)
+        EventUtil.GetInstance().AddEventListener("PlaySelectSound", function(){
+                if(databus.soundEnable)
+                    databus.battleInstance.bgmSelectSound.play()
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("PlayWipeOffSound", function(){
+                if(databus.soundEnable)
+                    databus.battleInstance.bgmWipeOff.play()
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("PlayExplodSound", function() {
+                if(databus.soundEnable)
+                    databus.battleInstance.bgmExplod.play()
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("ResetCountDown", function(){
+            databus.battleInstance.resetCountDown(databus.battleInstance)
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("GameOver", function(){
+            databus.battleInstance.gameOver(databus.battleInstance)
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("GameRestart", function(){
+            databus.battleInstance.gameRestart(databus.battleInstance)
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("UpdateScore", function(param){
+            databus.battleInstance.updateScore(databus.battleInstance, param)
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("CreateAffair", function(affair){
+                console.log("enter create affair", databus.battleInstance)
+            databus.battleInstance.createAffair(databus.battleInstance, affair)
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("HideRulePanel", function() {
+                var countdownBar = databus.battleInstance.spCountDownBar.node.getComponent("UICountDownBar")
+                if (countdownBar != null) {
+                    countdownBar.Resume()
+                }
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("Reborn", function() {
+                databus.battleInstance.reborn(databus.battleInstance)
+            }
+        )
+        EventUtil.GetInstance().AddEventListener("ReturnToPreload", function() {
+            EventUtil.GetInstance().RemoveEventKey("PlaySelectSound")
+            EventUtil.GetInstance().RemoveEventKey("PlayWipeOffSound")
+            EventUtil.GetInstance().RemoveEventKey("PlayExplodSound")
+            EventUtil.GetInstance().RemoveEventKey("ResetCountDown")
+            EventUtil.GetInstance().RemoveEventKey("GameOver")
+            EventUtil.GetInstance().RemoveEventKey("GameRestart")
+            EventUtil.GetInstance().RemoveEventKey("UpdateScore")
+            EventUtil.GetInstance().RemoveEventKey("HideRulePanel")
+            EventUtil.GetInstance().RemoveEventKey("CreateAffair")
+            EventUtil.GetInstance().RemoveEventKey("Reborn")
+                setTimeout(function(){
+                    new LevelManager().SwitchLevel("preload", null)
+                }, 100)
+            }
+        )
+
         if(databus.soundEnable) this.bgm.play()
         SceneManager.GetInstance().rootCanvas = this.node
+        console.log("this.lbAffair:" + this.lbAffair.node)
         GameInfo.GetInstance().Start(this.cellContent)
-        var countdownBar = this.spCountDownBar.node.getComponent("UICountDownBar")
+        let countdownBar = this.spCountDownBar.node.getComponent("UICountDownBar")
         if(countdownBar != null){
             countdownBar.Init(databus.countDownTime, function(){
                 GameInfo.GetInstance().GameOver(false)
@@ -188,15 +213,24 @@ cc.Class({
         temp.bgm.stop()
         if(databus.win){
             if(databus.soundEnable)
+            {
                 temp.bgmWin.play()
+            }
         }else{
             if(databus.soundEnable)
+            {
                 temp.bgmLose.play()
+            }
         }
         var countdownBar = temp.spCountDownBar.node.getComponent("UICountDownBar")
         if(countdownBar != null){
             countdownBar.Pause()
         }
+    },
+
+    reborn(temp){
+        temp.bgm.play()
+        temp.resetCountDown(temp)
     },
 
     updateScore(temp, param){
@@ -225,6 +259,7 @@ cc.Class({
         }
         if(affairText != null)
         {
+            console.log("temp:", temp)
             temp.lbAffair.node.active = true
             temp.lbAffair.string = affairText
             temp.conAffairFill.active = false
@@ -247,6 +282,7 @@ cc.Class({
                         {
                             instance.parent = temp.conAffairFill
                             instance.y = 0
+                            console.log("conAffairFill childCount:", temp.conAffairFill.childrenCount)
                         }
                     })
                 }

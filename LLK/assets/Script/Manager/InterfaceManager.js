@@ -23,13 +23,27 @@ export default class InterfaceManager {
         wx.shareAppMessage({title:title})
     }
 
+    RegisterShareAppMessageHandler(){
+        wx.showShareMenu()
+        var imageArr = databus.cfgData.set.share.img
+        var imageUrlIndex = Math.floor(Math.random() * imageArr.length)
+        var temp = this
+        wx.onShareAppMessage(function() {
+            return {
+                title: temp.getTitle(),
+                imageUrl: imageArr[imageUrlIndex]
+            }
+        })
+    }
+
     ShareWithImg(){
         this.Share(this.getTitle())
         var imageArr = databus.cfgData.set.share.img
         var imageUrlIndex = Math.floor(Math.random() * imageArr.length)
+        var temp = this
         wx.onShareAppMessage(function () {
             return {
-                title: this.getTitle(),
+                title: temp.getTitle(),
                 imageUrl: imageArr[imageUrlIndex]
             }
         })
@@ -39,9 +53,10 @@ export default class InterfaceManager {
         this.Share(this.getTitleWithScore())
         var imageArr = databus.cfgData.set.share.img
         var imageUrlIndex = Math.floor(Math.random() * imageArr.length)
+        var temp = this
         wx.onShareAppMessage(function () {
             return {
-                title: this.getTitleWithScore(),
+                title: temp.getTitleWithScore(),
                 imageUrl: imageArr[imageUrlIndex]
             }
         })
@@ -58,7 +73,7 @@ export default class InterfaceManager {
 
     CreateAdViedo(adUnitId){
         var videoAdd = wx.createRewardedVideoAd({
-            adUnitId:'adunit-74747ff9635d22b8'
+            adUnitId:adUnitId
         })
         videoAdd.onLoad(()=>{console.log("广告组件拉取成功")})
         videoAdd.show()
@@ -74,6 +89,7 @@ export default class InterfaceManager {
             else
             {
                 //异常退出
+                console.log(res)
             }
         })
     }
@@ -83,8 +99,8 @@ export default class InterfaceManager {
             adUnitId: adUnitId,
             style: {
                 left: 0,
-                bottom: 76,
-                width: 320
+                top: databus.screenHeight - databus.adHeight,
+                width: databus.screenWidth
             }
         })
 

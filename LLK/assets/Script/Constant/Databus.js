@@ -13,13 +13,14 @@ export default class Databus {
 
         instance = this
 
-        this.productName = "水果连消乐"
-        this.cfgUrl = "https://2zhuji.cn/index.php?g=Wap&m=WxaGame&a=get_config&token=wkgq1527239965"
+        this.productName = "水果消消乐吧"
+        this.cfgUrl = "https://wxa.05babay.cn/index.php?g=Wap&m=WxaGame&a=get_config&token=sgxxlb1529915009"
         this.soundEnable = true
         this.screenWidth = 375
         this.screenHeight = 812
         this.screenWidthRatio = 1
         this.screenHeightRatio = 1
+        this.adHeight = 115
         this.countDownTime = 15
         this.gridColumn = 9
         this.gridRow = 12
@@ -172,6 +173,7 @@ export default class Databus {
     }
 
     Reset(){
+        this.win = null
         this.score = 0
         this.itemExchangeNum = 3
         this.itemRemoveNum = 3

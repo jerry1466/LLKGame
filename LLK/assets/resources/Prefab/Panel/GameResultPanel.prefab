@@ -63,8 +63,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 300,
-      "height": 400
+      "width": 250,
+      "height": 350
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -117,13 +117,13 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 156,
-      "height": 70
+      "width": 311,
+      "height": 140
     },
     "_rotationX": 0,
     "_rotationY": 0,
-    "_scaleX": 1,
-    "_scaleY": 1,
+    "_scaleX": 0.5,
+    "_scaleY": 0.5,
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -146,10 +146,10 @@
     "_enabled": true,
     "_N$string": "<color=#ff0000>胜利！</c>\n<color=#03AEFF>最终积分：15000</color>",
     "_N$horizontalAlign": 1,
-    "_N$fontSize": 20,
+    "_N$fontSize": 40,
     "_N$font": null,
     "_N$maxWidth": 0,
-    "_N$lineHeight": 35,
+    "_N$lineHeight": 70,
     "_N$imageAtlas": null,
     "_N$handleTouchEvent": true
   },
@@ -739,7 +739,7 @@
     "_N$file": null,
     "_isSystemFontUsed": false,
     "_spacingX": 0,
-    "_N$string": "重新开始",
+    "_N$string": "返回菜单",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -1166,6 +1166,8 @@
       "__id__": 1
     },
     "_enabled": true,
+    "openAnim": true,
+    "blankClose": false,
     "lbScore": {
       "__id__": 3
     },
